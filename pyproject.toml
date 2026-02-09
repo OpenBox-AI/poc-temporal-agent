@@ -1,0 +1,76 @@
+[project]
+name = "temporal_AI_agent"
+version = "0.2.0"
+description = "Temporal AI Agent"
+authors = [
+    { name = "Steve Androulakis", email = "steve.androulakis@temporal.io" },
+    { name = "Laine Smith", email = "lainecaseysmith@gmail.com" },
+    { name = "Joshua Smith", email = "josh.smith@temporal.io" },
+]
+requires-python = ">=3.10,<4.0"
+readme = "README.md"
+license = "MIT"
+dependencies = [
+    "temporalio>=1.8.0,<2",
+    "litellm>=1.70.0,<2",
+    "pyyaml>=6.0.2,<7",
+    "fastapi>=0.115.6,<0.116",
+    "uvicorn>=0.34.0,<0.35",
+    "python-dotenv>=1.0.1,<2",
+    "requests>=2.32.3,<3",
+    "pandas>=2.2.3,<3",
+    "stripe>=11.4.1,<12",
+    "gtfs-kit>=10.1.1,<11",
+    "fastmcp>=2.7.0,<3",
+    "httpx>=0.28.0,<1",
+    # OpenBox SDK
+    "openbox-temporal-sdk-python",
+]
+
+[project.urls]
+"Bug Tracker" = "https://github.com/temporal-community/temporal-ai-agent/issues"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.2",
+    "pytest-asyncio>=0.26.0,<0.27",
+    "black~=23.7",
+    "isort~=5.12",
+    "mypy>=1.16.0,<2",
+    "poethepoet>=0.37.0",
+]
+
+[tool.poe.tasks]
+format = [{cmd = "black ."}, {cmd = "isort ."}]
+lint = [{cmd = "black --check ."}, {cmd = "isort --check-only ."}, {ref = "lint-types" }]
+lint-types = "mypy --check-untyped-defs --namespace-packages ."
+test = "pytest"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build]
+packages = ["activities", "api", "goals", "models", "prompts", "shared", "tools", "workflows"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+log_cli = true
+log_cli_level = "INFO"
+log_cli_format = "%(asctime)s [%(levelname)8s] %(message)s (%(filename)s:%(lineno)s)"
+asyncio_default_fixture_loop_scope = "function"
+norecursedirs = ["vibe"]
+
+[tool.mypy]
+python_version = "3.10"
+ignore_missing_imports = true
+check_untyped_defs = true
+namespace_packages = true
+explicit_package_bases = true
+ignore_errors = true
+
+[tool.isort]
+profile = "black"
