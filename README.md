@@ -1,6 +1,6 @@
 # Temporal AI Agent - OpenBox SDK Demo
 
-A demo project showing how to integrate the [OpenBox SDK](https://pypi.org/project/openbox-temporal-sdk-python/) into a [Temporal AI Agent](https://github.com/temporalio/temporal-ai-agent) application. The agent uses an LLM to chat with users, gather requirements, and execute tools (flight booking, invoicing, HR tasks, etc.) — all orchestrated durably by Temporal, with OpenBox providing governance and observability.
+A demo project showing how to integrate the [OpenBox SDK](https://pypi.org/project/openbox-temporal-sdk-python/) into a [Temporal AI Agent]([https://github.com/temporalio/temporal-ai-agent](https://github.com/temporal-community/temporal-ai-agent)) application. The agent uses an LLM to chat with users, gather requirements, and execute tools (flight booking, invoicing, HR tasks, etc.) — all orchestrated durably by Temporal, with OpenBox providing governance and observability.
 
 ## Architecture
 
