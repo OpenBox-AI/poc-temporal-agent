@@ -14,8 +14,8 @@ from shared.config import TEMPORAL_TASK_QUEUE, get_temporal_client
 from shared.mcp_client_manager import MCPClientManager
 from workflows.agent_goal_workflow import AgentGoalWorkflow
 
-# Import the simple factory function
-from openbox import create_openbox_worker
+from temporalio.worker import Worker
+from openbox.plugin import OpenBoxPlugin
 
 
 async def main():
@@ -61,9 +61,9 @@ async def main():
     # Run the worker with proper cleanup
     try:
         with concurrent.futures.ThreadPoolExecutor(max_workers=100) as activity_executor:
-            # Create worker with OpenBox governance
-            worker = create_openbox_worker(
-                client=client,
+            # Create worker with OpenBox plugin
+            worker = Worker(
+                client,
                 task_queue=TEMPORAL_TASK_QUEUE,
                 workflows=[AgentGoalWorkflow],
                 activities=[
@@ -75,15 +75,20 @@ async def main():
                     mcp_list_tools,
                 ],
                 activity_executor=activity_executor,
-                # OpenBox config
-                openbox_url=os.getenv("OPENBOX_URL"),
-                openbox_api_key=os.getenv("OPENBOX_API_KEY"),
-                governance_timeout=float(os.getenv("OPENBOX_GOVERNANCE_TIMEOUT", "30.0")),
-                governance_policy=os.getenv("OPENBOX_GOVERNANCE_POLICY", "fail_open"),
-                # Database instrumentation (auto-detects all available: psycopg2, asyncpg, mysql, pymongo, redis, sqlalchemy)
-                instrument_databases=True,
-                # File I/O instrumentation
-                instrument_file_io=True,
+                plugins=[
+                    OpenBoxPlugin(
+                        openbox_url=os.getenv("OPENBOX_URL"),
+                        openbox_api_key=os.getenv("OPENBOX_API_KEY"),
+                        # AIP DID + Ed25519 signing (both-or-neither). When set, every
+                        # Core request is signed locally — required for signing_required=true.
+                        agent_did=os.getenv("OPENBOX_AGENT_DID"),
+                        agent_private_key=os.getenv("OPENBOX_AGENT_PRIVATE_KEY"),
+                        governance_timeout=float(os.getenv("OPENBOX_GOVERNANCE_TIMEOUT", "30.0")),
+                        governance_policy=os.getenv("OPENBOX_GOVERNANCE_POLICY", "fail_open"),
+                        instrument_databases=True,
+                        instrument_file_io=True,
+                    ),
+                ],
             )
 
             print(f"Starting worker, connecting to task queue: {TEMPORAL_TASK_QUEUE}")
