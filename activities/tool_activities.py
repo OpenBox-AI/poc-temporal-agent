@@ -1,17 +1,17 @@
 import inspect
 import json
 import os
+from collections.abc import Sequence
 from contextlib import asynccontextmanager
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Sequence
+from typing import Any, Dict, List, Optional
 
 from dotenv import load_dotenv
 from litellm import completion
+from openbox.tracing import traced
 from temporalio import activity
 from temporalio.common import RawValue
 from temporalio.exceptions import ApplicationError
-
-from openbox.tracing import traced
 
 from models.data_types import (
     EnvLookupInput,

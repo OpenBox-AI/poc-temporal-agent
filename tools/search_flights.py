@@ -327,7 +327,9 @@ def search_flights(args: dict) -> dict:
             if "error" not in result:
                 return result
             # Otherwise fall through to mock data
-            print(f"Real API returned error, falling back to mock data: {result.get('error')}")
+            print(
+                f"Real API returned error, falling back to mock data: {result.get('error')}"
+            )
         except Exception as e:
             print(f"Real API failed, falling back to mock data: {e}")
 
