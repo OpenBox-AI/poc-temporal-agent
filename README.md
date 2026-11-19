@@ -35,7 +35,7 @@ A demo project showing how to integrate the [OpenBox SDK](https://pypi.org/proje
 
 ## Prerequisites
 
-- Python 3.10+
+- Python 3.11+
 - [uv](https://docs.astral.sh/uv/) (Python package manager)
 - Node.js 18+ and npm
 - A running [Temporal server](https://learn.temporal.io/getting_started/python/dev_environment/) (local or cloud)
@@ -105,31 +105,40 @@ Visit [http://localhost:5173](http://localhost:5173)
 This demo uses the `openbox-temporal-sdk-python` package to add governance and observability to the Temporal worker. The integration point is in `scripts/run_worker.py`:
 
 ```python
-from openbox import create_openbox_worker
+from openbox.plugin import OpenBoxPlugin
 
-worker = create_openbox_worker(
-    client=client,
+worker = Worker(
+    client,
     task_queue=TEMPORAL_TASK_QUEUE,
     workflows=[AgentGoalWorkflow],
     activities=[...],
-    # OpenBox config
-    openbox_url=os.getenv("OPENBOX_URL"),
-    openbox_api_key=os.getenv("OPENBOX_API_KEY"),
-    governance_timeout=float(os.getenv("OPENBOX_GOVERNANCE_TIMEOUT", "30.0")),
-    governance_policy=os.getenv("OPENBOX_GOVERNANCE_POLICY", "fail_open"),
-    instrument_databases=True,
-    instrument_file_io=True,
+    plugins=[
+        OpenBoxPlugin(
+            openbox_url=os.getenv("OPENBOX_URL"),
+            openbox_api_key=os.getenv("OPENBOX_API_KEY"),
+            workload_private_key=os.getenv("OPENBOX_WORKLOAD_PRIVATE_KEY") or None,
+            governance_timeout=float(os.getenv("OPENBOX_GOVERNANCE_TIMEOUT", "30.0")),
+            governance_policy=os.getenv("OPENBOX_GOVERNANCE_POLICY", "fail_open"),
+            instrument_databases=True,
+            instrument_file_io=True,
+        ),
+    ],
 )
 ```
 
 Configure OpenBox in your `.env`:
 
 ```bash
-OPENBOX_URL=https://openbox-core-v2.node.lat
+OPENBOX_URL=https://core.openbox.ai
 OPENBOX_API_KEY=your-openbox-api-key
+OPENBOX_WORKLOAD_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----
+...
+-----END PRIVATE KEY-----"
 OPENBOX_GOVERNANCE_ENABLED=true
 OPENBOX_GOVERNANCE_POLICY=fail_closed  # fail_open or fail_closed
 ```
+
+`OPENBOX_WORKLOAD_PRIVATE_KEY` is the workload private key shown when you create the agent (IAM v3). Agents still registered with a DID set `OPENBOX_AGENT_DID` and `OPENBOX_AGENT_PRIVATE_KEY` instead.
 
 For full SDK documentation, see the [OpenBox SDK docs](https://pypi.org/project/openbox-temporal-sdk-python/).
 

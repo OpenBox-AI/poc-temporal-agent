@@ -1,7 +1,8 @@
 import concurrent.futures
 import uuid
+from collections.abc import Sequence
 from contextlib import contextmanager
-from typing import Any, Dict, List, Optional, Sequence
+from typing import Any, Dict, List, Optional
 
 from temporalio import activity
 from temporalio.client import Client, WorkflowExecutionStatus
