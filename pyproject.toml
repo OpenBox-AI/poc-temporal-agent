@@ -16,14 +16,20 @@ dependencies = [
     # 1.82.7 and 1.82.8, which were pulled from PyPI.
     "litellm>=1.103.1,<2",
     "pyyaml>=6.0.2,<7",
-    "fastapi>=0.115.6,<0.116",
-    "uvicorn>=0.34.0,<0.35",
+    # 0.133.0 is the first FastAPI that allows Starlette 1.x, where the Starlette
+    # advisories are fixed.
+    # FastAPI 0.142+ needs opentelemetry-api>=1.44, which the OpenBox SDK caps
+    # below 1.40, so the lock resolves to the 0.141 line for now.
+    "fastapi>=0.133.0,<1",
+    "uvicorn>=0.35.0,<1",
     "python-dotenv>=1.0.1,<2",
     "requests>=2.32.3,<3",
     "pandas>=2.2.3,<3",
     "stripe>=11.4.1,<12",
     "gtfs-kit>=10.1.1,<11",
-    "fastmcp>=2.7.0,<3",
+    # Floor is the first 3.x release with no published advisory. 3.x also drops
+    # the diskcache-backed store that 2.x pulled in.
+    "fastmcp>=3.4.10,<4",
     "httpx>=0.28.0,<1",
     # OpenBox SDK
     "openbox-temporal-sdk-python>=2.0.0,<3",
