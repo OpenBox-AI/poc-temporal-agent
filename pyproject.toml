@@ -7,7 +7,7 @@ authors = [
     { name = "Laine Smith", email = "lainecaseysmith@gmail.com" },
     { name = "Joshua Smith", email = "josh.smith@temporal.io" },
 ]
-requires-python = ">=3.10,<4.0"
+requires-python = ">=3.11,<4.0"
 readme = "README.md"
 license = "MIT"
 dependencies = [
@@ -24,7 +24,7 @@ dependencies = [
     "fastmcp>=2.7.0,<3",
     "httpx>=0.28.0,<1",
     # OpenBox SDK
-    "openbox-temporal-sdk-python",
+    "openbox-temporal-sdk-python>=2.0.0,<3",
 ]
 
 [project.urls]
@@ -65,15 +65,12 @@ asyncio_default_fixture_loop_scope = "function"
 norecursedirs = ["vibe"]
 
 [tool.mypy]
-python_version = "3.10"
+python_version = "3.11"
 ignore_missing_imports = true
 check_untyped_defs = true
 namespace_packages = true
 explicit_package_bases = true
 ignore_errors = true
-
-[tool.uv.sources]
-openbox-temporal-sdk-python = { path = "../openbox-temporal-sdk-python", editable = true }
 
 [tool.isort]
 profile = "black"

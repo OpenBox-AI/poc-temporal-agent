@@ -1,7 +1,7 @@
 import asyncio
 import uuid
 from collections import deque
-from typing import Sequence
+from collections.abc import Sequence
 from unittest.mock import patch
 
 import pytest
